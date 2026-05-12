@@ -1,0 +1,10 @@
+new folder\system_stm32l1xx.o: ..\Core\Src\system_stm32l1xx.c
+new folder\system_stm32l1xx.o: d:\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.3.0\Drivers\CMSIS\Device\ST\STM32L1xx\Include\stm32l1xx.h
+new folder\system_stm32l1xx.o: d:\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.3.0\Drivers\CMSIS\Device\ST\STM32L1xx\Include\stm32l152xc.h
+new folder\system_stm32l1xx.o: d:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\core_cm3.h
+new folder\system_stm32l1xx.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+new folder\system_stm32l1xx.o: d:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_version.h
+new folder\system_stm32l1xx.o: d:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_compiler.h
+new folder\system_stm32l1xx.o: d:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\cmsis_armcc.h
+new folder\system_stm32l1xx.o: d:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include\mpu_armv7.h
+new folder\system_stm32l1xx.o: d:\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.3.0\Drivers\CMSIS\Device\ST\STM32L1xx\Include\system_stm32l1xx.h

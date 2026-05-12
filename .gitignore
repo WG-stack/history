@@ -1,0 +1,29 @@
+# ===== STM32 / IDE project files to keep =====
+# Source code, headers, startup files, CubeMX .ioc, and project configs should be committed.
+# This file ignores generated build artifacts and local-only IDE state.
+# ===== Build outputs =====
+Debug/
+Release/
+build/
+out/
+obj/
+Objects/
+Listings/
+# Keil / MDK build outputs
+MDK-ARM/**/Debug/
+MDK-ARM/**/Release/
+MDK-ARM/**/*.axf
+MDK-ARM/**/*.bin
+MDK-ARM/**/*.hex
+MDK-ARM/**/*.map
+MDK-ARM/**/*.lst
+MDK-ARM/**/*.o
+MDK-ARM/**/*.d
+MDK-ARM/**/*.dep
+MDK-ARM/**/*.htm
+MDK-ARM/**/*.html
+MDK-ARM/**/*.lnp
+MDK-ARM/**/*.s19
+MDK-ARM/**/*.build_log.htm
+MDK-ARM/**/*.uvgui.*
+MDK-ARM/**/*.uvoptx

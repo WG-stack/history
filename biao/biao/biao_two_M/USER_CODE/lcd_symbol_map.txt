@@ -1,0 +1,48 @@
+LCD断码表映射关系 (根据新提供的完整断码表)
+==============================================
+
+注意：表格中的COM1-COM4对应代码中的COM0-COM3
+     表格中的SIG对应代码中的SEG
+
+数字显示段码映射：
+-----------------
+数字1: SIG0(1F), SIG1(1E,1C,1D), SIG2(1A,1C)
+数字2: SIG3(2F), SIG4(2E,2C,2D), SIG5(2A,2C)
+数字3: SIG6(3F), SIG7(3E,3C,3D), SIG8(3A,3C)
+数字4: SIG9(4F), SIG10(4E,4C,4D), SIG11(4A,4C)
+数字5: SIG12(5F), SIG13(5E,5C,5D), SIG14(5A,5C)
+数字6: SIG15(6F), SIG16(6E,6C,6D), SIG17(6A,6C)
+
+符号映射：
+---------
+SIG0:  COM1=rev,    COM2=1F,      COM3=1A,      COM4=+sign
+SIG1:  COM1=1F,     COM2=1E,      COM3=1C,      COM4=1D
+SIG2:  COM1=1A,     COM2=1C,      COM3=2E,      COM4=2C
+SIG3:  COM1=2F,     COM2=2E,      COM3=2C,      COM4=3F
+SIG4:  COM1=2A,     COM2=2C,      COM3=3E,      COM4=3C
+SIG5:  COM1=3F,     COM2=3E,      COM3=3C,      COM4=4F
+SIG6:  COM1=3A,     COM2=3C,      COM3=4E,      COM4=4C
+SIG7:  COM1=4F,     COM2=4E,      COM3=4C,      COM4=5F
+SIG8:  COM1=4A,     COM2=4C,      COM3=5E,      COM4=5C
+SIG9:  COM1=5F,     COM2=5E,      COM3=5C,      COM4=6F
+SIG10: COM1=5A,     COM2=5C,      COM3=6E,      COM4=6C
+SIG11: COM1=6F,     COM2=6E,      COM3=6C,      COM4=set
+SIG12: COM1=6A,     COM2=6C,      COM3=ok,      COM4=NG
+SIG13: COM1=ok,     COM2=NG,      COM3=tol,     COM4=rel
+SIG14: COM1=max,    COM2=ins1,    COM3=min,     COM4=hold
+SIG15: COM1=ins1,   COM2=inu1,    COM3=in-p,    COM4=in
+SIG16: COM1=mm,     COM2=mm-p,    COM3=mm+p,    COM4=mmut
+SIG17: COM1=lo-batt, COM2=ps27,   COM3=ps28,    COM4=ps29
+SIG18: COM1=ps27,   COM2=ps26,    COM3=ps26,    COM4=ps25
+SIG19: COM1=ps26,   COM2=ps25,    COM3=ps24,    COM4=ps23
+SIG20: COM1=ps21,   COM2=ps20,    COM3=ps19,    COM4=ps18
+SIG21: COM1=ps18,   COM2=ps17,    COM3=ps16,    COM4=ps15
+SIG22: COM1=ps11,   COM2=ps10,    COM3=ps9,     COM4=ps8
+SIG23: COM1=ps10,   COM2=ps9,     COM3=ps8,     COM4=ps7
+SIG24: COM1=ps3,    COM2=ps2,     COM3=ps1,     COM4=ps0
+SIG25: COM1=ps1,    COM2=--,      COM3=--,      COM4=--
+
+说明：
+1. 数字段码使用权值计算方式
+2. 符号直接映射到对应的SIG和COM
+3. 小数点位置待确认

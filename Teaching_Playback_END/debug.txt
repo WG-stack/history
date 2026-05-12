@@ -1,0 +1,131 @@
+[DBG-7E] TIM2 cnt=0 delta=0 | PA15=1 PB3=1
+[INFO] Erasing Flash sectors 0~31 ...
+[DBG-HE] Erasing sector 0 (header)...
+[DBG-HE] WaitDone: done after 5482 polls (normal).
+[DBG-HE] Sector 0 erase done.
+[DBG-7E] POST-ERASE sec0[0..3]=0xFF 0xFF 0xFF 0xFF (expect FF FF FF FF)
+[DBG-HE] Erasing data sector 1...
+[DBG-HE] WaitDone: done after 8088 polls (normal).
+[DBG-HE] Data sector 1 erase done.
+[DBG-HE] WaitDone: done after 8557 polls (normal).
+[DBG-HE] WaitDone: done after 11629 polls (normal).
+[DBG-HE] WaitDone: done after 8267 polls (normal).
+[DBG-HE] WaitDone: done after 8656 polls (normal).
+[DBG-HE] WaitDone: done after 9064 polls (normal).
+[DBG-HE] WaitDone: done after 8205 polls (normal).
+[DBG-HE] WaitDone: done after 8915 polls (normal).
+[INFO]   Erased 8/31 sectors
+[DBG-HE] WaitDone: done after 7479 polls (normal).
+[DBG-HE] WaitDone: done after 10445 polls (normal).
+[DBG-HE] WaitDone: done after 9189 polls (normal).
+[DBG-HE] WaitDone: done after 9533 polls (normal).
+[DBG-HE] WaitDone: done after 8225 polls (normal).
+[DBG-HE] WaitDone: done after 12213 polls (normal).
+[DBG-HE] WaitDone: done after 9644 polls (normal).
+[DBG-HE] WaitDone: done after 8204 polls (normal).
+[INFO]   Erased 16/31 sectors
+[DBG-HE] WaitDone: done after 9961 polls (normal).
+[DBG-HE] WaitDone: done after 7224 polls (normal).
+[DBG-HE] WaitDone: done after 9829 polls (normal).
+[DBG-HE] WaitDone: done after 10681 polls (normal).
+[DBG-HE] WaitDone: done after 7544 polls (normal).
+[DBG-HE] WaitDone: done after 15383 polls (normal).
+[DBG-HE] WaitDone: done after 9303 polls (normal).
+[DBG-HE] WaitDone: done after 7416 polls (normal).
+[INFO]   Erased 24/31 sectors
+[DBG-HE] WaitDone: done after 10546 polls (normal).
+[DBG-HE] WaitDone: done after 10082 polls (normal).
+[DBG-HE] WaitDone: done after 10346 polls (normal).
+[DBG-HE] WaitDone: done after 10079 polls (normal).
+[DBG-HE] WaitDone: done after 9886 polls (normal).
+[DBG-HE] WaitDone: done after 7021 polls (normal).
+[DBG-HE] WaitDone: done after 8060 polls (normal).
+[INFO] Erase done. Starting recording...
+[DBG-H1] Motor_Enable(0): STBY=LOW -> TB6612 HIGH-Z (true freewheel). runId=post-fix
+[REC] Recording started. Press PA4 again to stop.
+[DBG-H1] REC pt=0 L_delta=0 R_delta=0 | TIM2=0 TIM3=0
+[DBG-H1] REC pt=50 L_delta=0 R_delta=0 | TIM2=0 TIM3=0
+[DBG-HE] WaitDone: done after 291 polls (normal).
+[WARN] Data page @0x001000 verify fail(try1): got=00 00 B7 00 exp=00 00 00 00
+[DBG-HE] WaitDone: done after 13511 polls (normal).
+[DBG-HE] WaitDone: done after 289 polls (normal).
+[WARN] Data page @0x001000 verify fail(try2): got=00 00 B7 00 exp=00 00 00 00
+[DBG-HE] WaitDone: done after 13039 polls (normal).
+[DBG-HE] WaitDone: done after 287 polls (normal).
+[WARN] Data page @0x001000 verify fail(try3): got=00 00 B7 00 exp=00 00 00 00
+[ERR] Data page @0x001000 write failed! Recording may be corrupted.
+[DBG-H1] REC pt=100 L_delta=0 R_delta=0 | TIM2=0 TIM3=0
+[DBG-HE] WaitDone: done after 313 polls (normal).
+[WARN] Data page @0x001100 verify fail(try1): got=00 08 A7 00 exp=00 00 00 00
+[ERR] Data page @0x001100 write failed! Recording may be corrupted.
+[DBG-H1] REC pt=150 L_delta=22 R_delta=38 | TIM2=154 TIM3=208
+[DBG-7E] TIM2 cnt=257 delta=0 | PA15=0 PB3=1
+[DBG-HE] WaitDone: done after 283 polls (normal).
+[WARN] Data page @0x001200 verify fail(try1): got=00 00 BB 00 exp=00 00 00 00
+[ERR] Data page @0x001200 write failed! Recording may be corrupted.
+[DBG-H1] REC pt=200 L_delta=0 R_delta=1 | TIM2=573 TIM3=551
+[DBG-H1] REC pt=250 L_delta=0 R_delta=0 | TIM2=1125 TIM3=997
+[DBG-HE] WaitDone: done after 298 polls (normal).
+[WARN] Data page @0x001300 verify fail(try1): got=00 02 AF 00 exp=00 00 00 00
+[ERR] Data page @0x001300 write failed! Recording may be corrupted.
+[DBG-H1] REC pt=300 L_delta=16 R_delta=8 | TIM2=1672 TIM3=1489
+[DBG-HE] WaitDone: done after 287 polls (normal).
+[WARN] Data page @0x001400 verify fail(try1): got=00 00 8F 00 exp=00 00 00 00
+[ERR] Data page @0x001400 write failed! Recording may be corrupted.
+[DBG-H1] REC pt=350 L_delta=0 R_delta=0 | TIM2=1672 TIM3=1489
+[DBG-7E] TIM2 cnt=1672 delta=0 | PA15=1 PB3=1
+[DBG-HE] WaitDone: done after 329 polls (normal).
+[WARN] Data page @0x001500 verify fail(try1): got=00 00 DF 00 exp=00 00 00 00
+[ERR] Data page @0x001500 write failed! Recording may be corrupted.
+[DBG-H1] REC pt=400 L_delta=0 R_delta=0 | TIM2=1672 TIM3=1489
+[DBG-HE] WaitDone: done after 167 polls (normal).
+[WARN] Data page @0x001600 verify fail(try1): got=01 67 00 00 exp=00 00 00 00
+[ERR] Data page @0x001600 write failed! Recording may be corrupted.
+[DBG-7E] PRE-WRITE header[0..3]=0x59 0x42 0xFF 0x54
+[DBG-HE] WaitDone: done after 13 polls (normal).
+[DBG-7E] POST-WRITE(try0) readback[0..3]=0x59 0x42 0xFF 0x54
+[DBG-7E] StopRecord done: sys_state=IDLE total_points=405
+[WARN] Recording FINISHED WITH FLASH ERRORS! Replay may be unreliable.
+[WARN] If replay behaves erratically, press PA4 to re-record.
+[REC] Stopped. 405 points saved (4.0 s).
+[DBG-7E] PA5 triggered! state=0 (0=IDLE,1=TEACH,2=SAVE,3=RPL)
+[DBG-7E] StartReplay called, sys_state=0
+[DBG-H2] Flash header: magic=0x54FF4259 (expect 0x54FF4259) pts=405
+[DBG-RPL] replay_buf pt[0..4]: (0,183) (0,0) (0,0) (0,0) (0,0)
+[WARN] Replay: recording had Flash write errors, trajectory may be imperfect.
+[DBG-RPL] enc before_clear: TIM2=1672 TIM3=1489
+[DBG-RPL] enc after_clear:  TIM2=1672 TIM3=1489
+[RPL] Replay started. 405 points (4.0 s). Press PA5 to abort.
+[DBG-RPL] idx=0 tgt_L=0 tgt_R=183 cur_L=0 cur_R=0 out_L=0 out_R=988
+>>UART_OK
+[DBG-7E] TIM2_Start=0 TIM3_Start=0 (0=OK,1=ERR,2=BUSY,3=TIMEOUT)
+[DBG-7E] GPIO idle: PA15=1 PB3=1 (TIM2 remap A/B) | PA6=1 PA7=1 (TIM3 A/B)
+[DBG-HH] Encoder_Init: TIM2_CNT=0 TIM3_CNT=0
+[DBG-HH] After 500ms idle: TIM2=0 TIM3=0 (non-zero=counting noise/signal)
+[DBG] E: before W25Q64_Init
+[DBG-HE] W25Q64_Init returned 1 (OK)
+[DBG] F: before MPU6050_Init
+[WARN] MPU6050 init failed. Check I2C1 wiring.
+[DBG] G: MPU6050 done
+[INFO] System ready. Press PA4=Record, PA5=Replay.
+[DBG-7E] PA5 raw=1 (0=LOW/pressed,1=HIGH/idle)
+[DBG-7E] PA5 triggered! state=0 (0=IDLE,1=TEACH,2=SAVE,3=RPL)
+[DBG-7E] StartReplay called, sys_state=0
+[DBG-H2] Flash header: magic=0x54FF4259 (expect 0x54FF4259) pts=405
+[DBG-RPL] replay_buf pt[0..4]: (0,183) (0,0) (0,0) (0,0) (0,0)
+[DBG-RPL] enc before_clear: TIM2=0 TIM3=0
+[DBG-RPL] enc after_clear:  TIM2=0 TIM3=0
+[RPL] Replay started. 405 points (4.0 s). Press PA5 to abort.
+[DBG-RPL] idx=0 tgt_L=0 tgt_R=183 cur_L=0 cur_R=0 out_L=0 out_R=988
+>>UART_OK
+[DBG-7E] TIM2_Start=0 TIM3_Start=0 (0=OK,1=ERR,2=BUSY,3=TIMEOUT)
+[DBG-7E] GPIO idle: PA15=1 PB3=1 (TIM2 remap A/B) | PA6=1 PA7=1 (TIM3 A/B)
+[DBG-HH] Encoder_Init: TIM2_CNT=0 TIM3_CNT=0
+[DBG-HH] After 500ms idle: TIM2=0 TIM3=0 (non-zero=counting noise/signal)
+[DBG] E: before W25Q64_Init
+[DBG-HE] W25Q64_Init returned 1 (OK)
+[DBG] F: before MPU6050_Init
+[WARN] MPU6050 init failed. Check I2C1 wiring.
+[DBG] G: MPU6050 done
+[INFO] System ready. Press PA4=Record, PA5=Replay.
+[DBG-7E] PA5 raw=1 (0=LOW/pressed,1=HIGH/idle)

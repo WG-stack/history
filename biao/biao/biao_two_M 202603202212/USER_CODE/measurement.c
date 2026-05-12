@@ -1,0 +1,362 @@
+/**
+  ******************************************************************************
+  * @file           : measurement.c
+  * @brief          : 测量逻辑模块实现
+  ******************************************************************************
+  */
+
+#include "measurement.h"
+#include "settings.h"
+#include <string.h>
+#include <math.h>
+
+/* Private variables ---------------------------------------------------------*/
+static MeasureData_t measure_data;
+
+//为了解决抖动数值跳动
+static float last_value = 0.0f;
+//static const float MIN_DELTA = 0.0002f;  // 根据分辨率选择合适的值
+
+// 平均滤波缓冲
+#define MAX_AVG_TIMES 16
+static float avg_buffer[MAX_AVG_TIMES];
+static uint8_t avg_index = 0;
+static uint8_t avg_count = 0;
+static AverageTimes_t last_avg_setting = (AverageTimes_t)-1; // 初始化为一个无效值
+
+/* Private function prototypes -----------------------------------------------*/
+static float ConvertSensorValue(SensorData_t *sensor_data);
+static void UpdatePointer(void);
+static void CheckTolerance(void);
+
+/**
+  * @brief  测量模块初始化
+  */
+void Measure_Init(void)
+{
+    memset(&measure_data, 0, sizeof(MeasureData_t));
+    
+    measure_data.mode = MODE_ABS;
+    measure_data.resolution = RESOLUTION_0_01MM;
+    measure_data.unit = UNIT_MM;
+    measure_data.tol_enabled = 0;
+}
+
+/**
+  * @brief  处理传感器数据
+  */
+void Measure_Process(SensorData_t *sensor_data)
+{
+    if (!sensor_data->data_valid) {
+        return;
+    }
+    // 转换传感器值
+    float sensor_value = ConvertSensorValue(sensor_data);
+    
+    // 获取平均设置
+    SystemSettings_t *settings = Settings_Get();
+    uint8_t target_avg_count = 1;
+    switch (settings->avg_times) {
+        case AVG_TIMES_0: target_avg_count = 1; break;
+        case AVG_TIMES_4: target_avg_count = 4; break;
+        case AVG_TIMES_8: target_avg_count = 8; break;
+        case AVG_TIMES_16: target_avg_count = 16; break;
+    }
+    
+    // 如果平均次数设置改变，或者刚开机，重置缓冲区
+    if (settings->avg_times != last_avg_setting || avg_count == 0) {
+        for (int i = 0; i < MAX_AVG_TIMES; i++) {
+            avg_buffer[i] = sensor_value;
+        }
+        avg_count = target_avg_count;
+        avg_index = 0;
+        last_avg_setting = settings->avg_times;
+    }
+    
+    // 存入缓冲区
+    avg_buffer[avg_index] = sensor_value;
+    avg_index = (avg_index + 1) % target_avg_count;
+    
+    // 计算平均值
+    float sum = 0.0f;
+    for (int i = 0; i < target_avg_count; i++) {
+        sum += avg_buffer[i];
+    }
+    float averaged = sum / target_avg_count;
+
+    // 根据当前分辨率动态计算死区阈值（设为1个分辨率单位）
+    float min_delta;
+    switch (measure_data.resolution) {
+        case RESOLUTION_0_0005MM: min_delta = 0.0005f; break;
+        case RESOLUTION_0_001MM:  min_delta = 0.001f;  break;
+        case RESOLUTION_0_01MM:   min_delta = 0.01f;   break;
+        default:                  min_delta = 0.001f;  break;
+    }
+    // 英制时阈值也需要对应缩小
+    if (measure_data.unit == UNIT_INCH) {
+        min_delta /= 25.4f;
+    }
+    if (fabsf(averaged - last_value) < min_delta) {
+        return;
+    }
+    last_value = averaged;
+
+    switch (measure_data.mode) {
+        case MODE_ABS:
+            measure_data.current_value = averaged - measure_data.abs_zero_value;
+            break;
+            
+        case MODE_REL:
+            measure_data.current_value = averaged - measure_data.rel_zero_value;
+            break;
+            
+        case MODE_MAX:
+            if (averaged > measure_data.max_value) {
+                measure_data.max_value = averaged;
+            }
+            measure_data.current_value = measure_data.max_value;
+            break;
+            
+        case MODE_MIN:
+            if (averaged < measure_data.min_value) {
+                measure_data.min_value = averaged;
+            }
+            measure_data.current_value = measure_data.min_value;
+            break;
+            
+        case MODE_TIR:
+            if (averaged > measure_data.max_value) {
+                measure_data.max_value = averaged;
+            }
+            if (averaged < measure_data.min_value) {
+                measure_data.min_value = averaged;
+            }
+            measure_data.tir_value = measure_data.max_value - measure_data.min_value;
+            measure_data.current_value = measure_data.tir_value;
+            break;
+    }
+    
+    // 量化到分辨率步长，消除浮点舍入导致的末位跳动
+    float step;
+    switch (measure_data.resolution) {
+        case RESOLUTION_0_0005MM: step = 0.0005f; break;
+        case RESOLUTION_0_001MM:  step = 0.001f;  break;
+        case RESOLUTION_0_01MM:   step = 0.01f;   break;
+        default:                  step = 0.001f;  break;
+    }
+    if (measure_data.unit == UNIT_INCH) {
+        step /= 25.4f;
+    }
+    measure_data.current_value = roundf(measure_data.current_value / step) * step;
+    
+    UpdatePointer();
+    
+    if (measure_data.tol_enabled) {
+        CheckTolerance();
+    }
+    
+    measure_data.data_updated = 1;
+}
+
+/**
+  * @brief  转换传感器值
+  * @note   传感器输出：每个数0.5微米
+  */
+static float ConvertSensorValue(SensorData_t *sensor_data)
+{
+    SystemSettings_t *settings = Settings_Get();
+    // sensor_data->value 现在是原始20位计数值（来自 sensor_gpio.c）
+    float raw_count = sensor_data->value;
+    float value;
+    if (sensor_data->is_inch) {
+        // 英制：通常 0.0001 inch/count
+        value = raw_count * 0.0001f;
+    } else {
+        // 公制：根据传感器型号选择分辨率
+        if (settings->sensor_type == SENSOR_TYPE_0_0005MM) {
+            value = raw_count * 0.0005f;
+        } else {
+            value = raw_count * 0.001f;
+        }
+    }
+    // 恢复符号
+    if (sensor_data->is_negative) {
+        value = -value;
+    }
+    // 方向设置
+    if (settings->move_direction == DIR_DOWN_POSITIVE) {
+        value = -value;
+    }
+    // 单位转换：传感器单位 → 显示单位
+    if (!sensor_data->is_inch && measure_data.unit == UNIT_INCH) {
+        value /= 25.4f;   // mm → inch
+    } else if (sensor_data->is_inch && measure_data.unit == UNIT_MM) {
+        value *= 25.4f;    // inch → mm
+    }
+    return value;
+}
+
+/**
+  * @brief  更新指针显示
+  * @note   根据分辨率和当前值计算指针位置
+  */
+static void UpdatePointer(void)
+{
+    float fractional_part;
+    int pointer;
+    
+    // 获取小数部分
+    fractional_part = fabsf(measure_data.current_value) - floorf(fabsf(measure_data.current_value));
+    
+    // 根据分辨率计算指针
+    switch (measure_data.resolution) {
+        case RESOLUTION_0_0005MM:  // 万分表
+            pointer = (int)(fractional_part * 10000) % 10;
+            break;
+            
+        case RESOLUTION_0_001MM:   // 千分表
+            pointer = (int)(fractional_part * 1000) % 10;
+            break;
+            
+        case RESOLUTION_0_01MM:    // 百分表
+            pointer = (int)(fractional_part * 100) % 10;
+            break;
+            
+        default:
+            pointer = 0;
+            break;
+    }
+    
+    // 处理超范围
+    if (pointer > 15) {
+        measure_data.pointer_value = 16;  // ps++
+    } else if (pointer < -15) {
+        measure_data.pointer_value = -16; // ps--
+    } else {
+        measure_data.pointer_value = pointer;
+    }
+}
+
+/**
+  * @brief  检查公差
+  */
+static void CheckTolerance(void)
+{
+    float deviation = measure_data.current_value - measure_data.tol_standard;
+    
+    if (deviation < measure_data.tol_lower) {
+        measure_data.tol_status = TOL_UNDER;
+    } else if (deviation > measure_data.tol_upper) {
+        measure_data.tol_status = TOL_OVER;
+    } else {
+        measure_data.tol_status = TOL_OK;
+    }
+}
+
+/**
+  * @brief  设置测量模式
+  */
+void Measure_SetMode(MeasureMode_t mode)
+{
+    MeasureMode_t old_mode = measure_data.mode;
+    // 先根据旧模式和新模式做特殊处理
+    if (old_mode == MODE_ABS && mode == MODE_REL) {
+        // 推算当前的实际传感器值
+        float sensor_value = measure_data.current_value + measure_data.abs_zero_value;
+        // 把这个位置作为相对零位
+        measure_data.rel_zero_value = sensor_value;
+        // 为了立即显示为0
+        measure_data.current_value = 0.0f;
+        measure_data.data_updated = 1;  // 让显示逻辑立刻刷新
+    }
+    
+    measure_data.mode = mode;
+    
+    // 重置MAX/MIN/TIR基准值
+    if (mode == MODE_MAX || mode == MODE_MIN || mode == MODE_TIR) {
+        measure_data.max_value = measure_data.current_value;
+        measure_data.min_value = measure_data.current_value;
+        measure_data.tir_value = 0;
+    }
+    last_value = -999.0f;        // 强制死区检测通过
+    measure_data.data_updated = 1; // 立即触发显示刷新
+}
+
+/**
+  * @brief  设置分辨率
+  */
+void Measure_SetResolution(Resolution_t res)
+{
+    measure_data.resolution = res;
+}
+
+/**
+  * @brief  设置单位
+  */
+void Measure_SetUnit(Unit_t unit)
+{
+    if (measure_data.unit != unit) {
+        float factor = (unit == UNIT_INCH) ? (1.0f / 25.4f) : 25.4f;
+        // 同步换算所有以显示单位存储的基准值
+        measure_data.abs_zero_value *= factor;
+        measure_data.rel_zero_value *= factor;
+        measure_data.current_value  *= factor;
+        measure_data.max_value      *= factor;
+        measure_data.min_value      *= factor;
+        measure_data.tir_value      *= factor;
+        // 如果公差也开着，同步换算公差基准
+        measure_data.tol_standard   *= factor;
+        measure_data.tol_upper      *= factor;
+        measure_data.tol_lower      *= factor;
+    }
+    measure_data.unit = unit;
+    last_value = -999.0f;
+    measure_data.data_updated = 1;
+}
+
+/**
+  * @brief  清零
+  */
+void Measure_Zero(void)
+{
+    if (measure_data.mode == MODE_ABS) {
+        measure_data.abs_zero_value += measure_data.current_value;
+    } else {
+        measure_data.rel_zero_value += measure_data.current_value;
+    }
+    
+    // 清零后立即强制更新：
+    // 1. 将显示值置0
+    measure_data.current_value = 0.0f;
+    // 2. 重置死区比较基准，让下一帧传感器数据能通过死区检测
+    last_value = -999.0f;  // 一个不可能的值，强制下次比较通过
+    // 3. 标记数据已更新，让 App_UpdateDisplay() 刷新屏幕
+    measure_data.data_updated = 1;
+}
+
+/**
+  * @brief  设置公差
+  */
+void Measure_SetTolerance(float standard, float upper, float lower)
+{
+    measure_data.tol_enabled = 1;
+    measure_data.tol_standard = standard;
+    measure_data.tol_upper = upper;
+    measure_data.tol_lower = lower;
+}
+
+/**
+  * @brief  清除公差
+  */
+void Measure_ClearTolerance(void)
+{
+    measure_data.tol_enabled = 0;
+}
+
+/**
+  * @brief  获取测量数据
+  */
+MeasureData_t* Measure_GetData(void)
+{
+    return &measure_data;
+}

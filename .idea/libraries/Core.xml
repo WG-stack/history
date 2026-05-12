@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Core">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/biao/biao/Core.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

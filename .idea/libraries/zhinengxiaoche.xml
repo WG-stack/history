@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="zhinengxiaoche">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/zhinengxiaoche/zhinengxiaoche.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
